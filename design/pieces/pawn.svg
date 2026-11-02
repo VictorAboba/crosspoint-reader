@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <!-- CrossChess "Plate" set: pawn. One viewBox unit = one pixel at the 64 px board size.
+       Layers read by scripts/gen_chess_pieces.py:
+         body         filled silhouette (union of shapes)
+         cut          shapes removed from the body
+         detail       interior lines: black on the white piece, white on the black piece
+         detail-white extra ink on the white piece only (solid finials)
+       Elements without data-small="keep" are dropped below 40 px.
+       Outline, halo and the black rim are computed by the generator. -->
+  <g id="body" fill="#c8c8c8">
+    <rect x="17" y="50" width="30" height="7" rx="2.5"/>
+    <path d="M22 50 C26 47 28 43 28.5 38 L35.5 38 C36 43 38 47 42 50 Z"/>
+    <rect x="23" y="34" width="18" height="5" rx="2.5"/>
+    <circle cx="32" cy="26" r="9"/>
+  </g>
+  <g id="detail" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round">
+    <path d="M19 50 H45"/>
+    <path d="M25 35 H39"/>
+  </g>
+</svg>

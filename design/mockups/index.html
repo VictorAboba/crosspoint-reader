@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrossChess mockups</title>
+<style>
+  :root { --bg: #f4f3ef; --fg: #1a1a1a; --muted: #6b6b6b; --card: #ffffff; --line: #d8d6cf; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1b1b1b; --fg: #eeeeea; --muted: #a3a3a0; --card: #262626; --line: #3a3a3a; }
+  }
+  body { margin: 0; padding: 24px 16px 48px; background: var(--bg); color: var(--fg);
+         font: 15px/1.5 system-ui, sans-serif; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.lead { margin: 0 0 20px; color: var(--muted); max-width: 70ch; }
+  .controls { margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .controls button { font: inherit; padding: 6px 12px; border: 1px solid var(--line);
+                     background: var(--card); color: var(--fg); border-radius: 6px; cursor: pointer; }
+  .controls button[aria-pressed="true"] { border-color: var(--fg); font-weight: 600; }
+  .grid { display: flex; flex-wrap: wrap; gap: 28px; }
+  figure { margin: 0; }
+  figure img { display: block; image-rendering: pixelated; background: #fff;
+               box-shadow: 0 0 0 1px var(--line), 0 6px 18px rgba(0,0,0,.12); border-radius: 4px; max-width: 100%; }
+  figcaption { margin-top: 8px; max-width: 528px; }
+  figcaption b { display: block; }
+  figcaption span { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>CrossChess screens for the Xteink X3</h1>
+<p class="lead">1-bit PNGs at panel size (528×792 portrait, 792×528 landscape), drawn by
+<code>design/mockups/render_mockups.py</code> with the firmware's piece bitmaps and built-in fonts.
+UI text is Russian, the user's language. At 1× a pixel is a panel pixel; the panel is about 250 ppi,
+so it looks smaller on the device.</p>
+<div class="controls" role="group" aria-label="Scale">
+  <button data-scale="1" aria-pressed="true">1×</button>
+  <button data-scale="2" aria-pressed="false">2×</button>
+</div>
+<div class="grid" id="grid"></div>
+<script>
+  const screens = [
+    ["1_hub", "Hub", "Resume card with a 24 px mini board, then new game, puzzles, PGN, settings."],
+    ["2_game", "Game", "Cursor on the e5 knight, last-move ring f8–d6, captured material, figurine move strip."],
+    ["2b_game_letters", "Game, letter notation", "Same position with the notation setting on letters (Кр, Ф, Л, С, К)."],
+    ["3_move_select", "Move input", "Knight e5 selected (frame), dots for quiet moves, corners for captures, cursor on f7."],
+    ["4_promotion", "Promotion", "Q/N/R/B column grows down from the promotion square, cursor on the queen."],
+    ["5_game_over", "Game over", "Dialog over the board; check glow on the black king, which lies toppled."],
+    ["6_puzzle", "Puzzle", "Task, solution progress, feedback after a correct move, streak."],
+    ["7_pgn", "PGN viewer", "Morphy, Paris 1858, after 16.Qb8+, with a comment and game progress."],
+    ["8_game_landscape", "Game, landscape", "Board 512×512 on the left, side panel with a move table; hints on the button edge."],
+  ];
+  const grid = document.getElementById("grid");
+  function render(scale) {
+    grid.innerHTML = "";
+    for (const [file, title, text] of screens) {
+      const fig = document.createElement("figure");
+      const img = new Image();
+      img.src = scale === 2 ? `${file}@2x.png` : `${file}.png`;
+      img.alt = title;
+      img.onload = () => { img.width = img.naturalWidth; };
+      const cap = document.createElement("figcaption");
+      cap.innerHTML = `<b>${title}</b><span>${text}</span>`;
+      fig.append(img, cap);
+      grid.append(fig);
+    }
+  }
+  for (const b of document.querySelectorAll("[data-scale]")) {
+    b.addEventListener("click", () => {
+      for (const o of document.querySelectorAll("[data-scale]")) o.setAttribute("aria-pressed", o === b);
+      render(Number(b.dataset.scale));
+    });
+  }
+  render(1);
+</script>
+</body>
+</html>

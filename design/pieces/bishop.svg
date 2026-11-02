@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <!-- CrossChess "Plate" set: bishop. See pawn.svg for the layer contract. -->
+  <g id="body" fill="#c8c8c8">
+    <rect x="14" y="50" width="36" height="7" rx="2.5"/>
+    <rect x="17" y="45" width="30" height="6" rx="2"/>
+    <path d="M24.5 46 L27 41 L37 41 L39.5 46 Z"/>
+    <rect x="22" y="37" width="20" height="5" rx="2.5"/>
+    <path d="M32 10 C42 15.5 44.5 26 40.5 32.5 L38 38 L26 38 L23.5 32.5 C19.5 26 22 15.5 32 10 Z"/>
+    <circle cx="32" cy="7.5" r="3.5"/>
+  </g>
+  <g id="detail" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round">
+    <path d="M16 50 H48"/>
+    <path d="M19 45 H45"/>
+    <path d="M36.5 17.5 L29.5 27.5" data-small="keep"/>
+  </g>
+  <g id="detail-white" fill="#000">
+    <circle cx="32" cy="7.5" r="3.5" data-small="keep"/>
+  </g>
+</svg>

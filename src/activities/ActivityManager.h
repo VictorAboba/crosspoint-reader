@@ -18,7 +18,7 @@
 class Activity;    // forward declaration
 class RenderLock;  // forward declaration
 
-enum class HomeMenuItem { NONE, FILE_BROWSER, LIBRARY, OPDS_BROWSER, FILE_TRANSFER, SETTINGS_MENU };
+enum class HomeMenuItem { NONE, FILE_BROWSER, LIBRARY, OPDS_BROWSER, FILE_TRANSFER, SETTINGS_MENU, CHESS };
 
 /**
  * ActivityManager
@@ -93,6 +93,8 @@ class ActivityManager {
   void goToLibrary();
   void goToBrowser();
   void goToPlugins(bool showOpds);
+  // Does nothing on boards built without chess (CROSSCHESS_ENABLED).
+  void goToChess();
   void goToReader(std::string path, bool allowFastInitialRefresh = false);
   void goToSleep(bool fromTimeout = false);
   void goToBoot();

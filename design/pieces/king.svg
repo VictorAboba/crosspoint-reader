@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <!-- CrossChess "Plate" set: king. See pawn.svg for the layer contract. -->
+  <g id="body" fill="#c8c8c8">
+    <rect x="12" y="50" width="40" height="7" rx="2.5"/>
+    <rect x="15" y="45" width="34" height="6" rx="2"/>
+    <path d="M21 46 L26 34 L38 34 L43 46 Z"/>
+    <rect x="22" y="29" width="20" height="6" rx="3"/>
+    <path d="M24 31 L40 31 L47 20 C49 15 45 12.5 40 13.5 C36 14.5 33 16 32 17
+             C31 16 28 14.5 24 13.5 C19 12.5 15 15 17 20 Z"/>
+    <rect x="30" y="2" width="4" height="15"/>
+    <rect x="26" y="5" width="12" height="4"/>
+  </g>
+  <g id="detail" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round">
+    <path d="M14 50 H50"/>
+    <path d="M17 45 H47"/>
+    <path d="M24 30 H40"/>
+    <path d="M32 20 V28"/>
+  </g>
+  <g id="detail-white" fill="#000">
+    <rect x="30" y="2" width="4" height="15" data-small="keep"/>
+    <rect x="26" y="5" width="12" height="4" data-small="keep"/>
+  </g>
+</svg>

@@ -28,6 +28,9 @@
 
 int HomeActivity::getMenuItemCount() const {
   int count = 4;  // File Browser, Library, File transfer, Settings
+  if (hasChessEntry()) {
+    count++;
+  }
   if (!recentBooks.empty()) {
     count += recentBooks.size();
   }
@@ -250,7 +253,9 @@ void HomeActivity::onEnter() {
   }
 
   const auto base = static_cast<int>(recentBooks.size());
-  selectorIndex = initialMenuItem == HomeMenuItem::NONE ? 0 : base + menuItemToIndex(initialMenuItem, hasLibrarySlot());
+  selectorIndex = initialMenuItem == HomeMenuItem::NONE
+                      ? 0
+                      : base + menuItemToIndex(initialMenuItem, hasLibrarySlot(), hasChessEntry());
 
   // Trigger first update
   requestUpdate();
@@ -311,7 +316,7 @@ void HomeActivity::loop() {
       return;
     }
     const int menuIndex = selectorIndex - static_cast<int>(recentBooks.size());
-    switch (indexToMenuItem(menuIndex, hasLibrarySlot())) {
+    switch (indexToMenuItem(menuIndex, hasLibrarySlot(), hasChessEntry())) {
       case HomeMenuItem::FILE_BROWSER:
         onFileBrowserOpen();
         break;
@@ -323,6 +328,9 @@ void HomeActivity::loop() {
         break;
       case HomeMenuItem::FILE_TRANSFER:
         onFileTransferOpen();
+        break;
+      case HomeMenuItem::CHESS:
+        onChessOpen();
         break;
       case HomeMenuItem::SETTINGS_MENU:
         onSettingsOpen();
@@ -528,6 +536,12 @@ void HomeActivity::render(RenderLock&&) {
                                         tr(STR_SETTINGS_TITLE)};
   std::vector<UIIcon> menuIcons = {Folder, Library, Transfer, Settings};
 
+  if (hasChessEntry()) {
+    // Placeholder icon until the chess one is drawn.
+    menuItems.insert(menuItems.end() - 1, tr(STR_CHESS));
+    menuIcons.insert(menuIcons.end() - 1, Blocks);
+  }
+
   if (hasLibrarySlot()) {
     menuItems.insert(menuItems.begin() + 2, hasPlugins ? tr(STR_PLUGINS) : tr(STR_OPDS_BROWSER));
     menuIcons.insert(menuIcons.begin() + 2, Plugins);
@@ -578,3 +592,5 @@ void HomeActivity::onFileTransferOpen() { activityManager.goToFileTransfer(); }
 void HomeActivity::onOpdsBrowserOpen() { activityManager.goToBrowser(); }
 
 void HomeActivity::onPluginsOpen() { activityManager.goToPlugins(hasOpdsServers); }
+
+void HomeActivity::onChessOpen() { activityManager.goToChess(); }

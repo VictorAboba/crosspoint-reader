@@ -18,6 +18,7 @@
 #include "boot_sleep/BootActivity.h"
 #include "boot_sleep/SleepActivity.h"
 #include "browser/OpdsBookBrowserActivity.h"
+#include "chess/ChessActivity.h"
 #include "components/HeaderBackTapTarget.h"
 #include "home/CrashActivity.h"
 #include "home/FileBrowserActivity.h"
@@ -322,6 +323,12 @@ void ActivityManager::goToBrowser() {
 
 void ActivityManager::goToPlugins(bool showOpds) {
   replaceActivity(std::make_unique<PluginCatalogActivity>(renderer, mappedInput, showOpds, /*rootMode=*/true));
+}
+
+void ActivityManager::goToChess() {
+#ifdef CROSSCHESS_ENABLED
+  replaceActivity(std::make_unique<ChessActivity>(renderer, mappedInput));
+#endif
 }
 
 void ActivityManager::goToReader(std::string path, const bool allowFastInitialRefresh) {
