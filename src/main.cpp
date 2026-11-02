@@ -44,6 +44,7 @@
 #include "activities/ActivityManager.h"
 #include "activities/settings/SdFirmwareUpdateActivity.h"
 #include "components/UITheme.h"
+#include "crosschess/BootGuard.h"
 #include "fontIds.h"
 #include "platform/UsbSerialJtagHandoff.h"
 #include "util/ButtonNavigator.h"
@@ -466,6 +467,8 @@ static bool holdSleepWhileUsbPowered() {
 
 // Enter deep sleep mode
 void enterDeepSleep(bool fromTimeout = false) {
+  // CrossChess: plugin delivery below can wait on the network for minutes.
+  crosschess::bootguard::stopWatchdog();
   HalPowerManager::Lock powerLock;  // Ensure we are at normal CPU frequency for sleep preparation
   APP_STATE.lastSleepFromReader = activityManager.isReaderActivity();
 
@@ -518,6 +521,7 @@ void enterDeepSleep(bool fromTimeout = false) {
   display.deepSleep();
   Storage.prepareForDeepSleep();
   LOG_DBG("MAIN", "Entering deep sleep");
+  crosschess::bootguard::sleeping();
 
   powerManager.startDeepSleep(gpio, wakeOnHeldButton);
 }
@@ -565,6 +569,9 @@ void setupDisplayAndFonts(bool seamless = false) {
 
 void setup() {
   BoardConfig::holdPowerRails();
+  // CrossChess: a build that keeps failing to start falls back to the
+  // previous firmware on its own. Counted before anything else can hang.
+  crosschess::bootguard::begin();
 
 #ifdef ENABLE_SERIAL_LOG
 #ifdef CROSSPOINT_WAIT_FOR_USB_SERIAL
@@ -623,6 +630,10 @@ void setup() {
   // The Picco has no second app slot to flash into (partitions_picco.csv).
   const bool recoveryFirmwareMode = wakeupReason == HalGPIO::WakeupReason::PowerButton && !BoardConfig::isPaperMono() &&
                                     !BoardConfig::isPicco() && mappedInputManager.isPressed(recoveryButton);
+  // CrossChess: Side Down + Power switches to the previous firmware.
+  crosschess::bootguard::checkSwitchButton(wakeupReason == HalGPIO::WakeupReason::PowerButton &&
+                                           !recoveryFirmwareMode &&
+                                           mappedInputManager.isPressed(MappedInputManager::Button::Down));
 
   halTiltSensor.begin();
   halClock.begin();
@@ -643,6 +654,7 @@ void setup() {
   }
 
   HalSystem::checkPanic();
+  crosschess::bootguard::backupPreviousFirmware();
 
   APP_STATE.loadFromFile();
   const bool isSleepWake = wakeupReason == HalGPIO::WakeupReason::PowerButton;
@@ -710,6 +722,7 @@ void setup() {
           !(FREEINK_DEVICE_PICCO && gpio.isUsbConnected())) {
         LOG_DBG("MAIN", "Power-button wake not held through verification, sleeping");
         Storage.prepareForDeepSleep();
+        crosschess::bootguard::sleeping();
         powerManager.startDeepSleep(gpio);
       }
       wakePowerReleasePending = true;
@@ -729,6 +742,7 @@ void setup() {
       break;
 #else
       Storage.prepareForDeepSleep();
+      crosschess::bootguard::sleeping();
       powerManager.startDeepSleep(gpio);
       break;
 #endif
@@ -851,6 +865,7 @@ void loop() {
   const unsigned long loopStartTime = millis();
   static unsigned long lastMemPrint = 0;
 
+  crosschess::bootguard::loop();
   gpio.setSharedConfirmPowerShortPressEmitsPower(SETTINGS.shortPwrBtn == CrossPointSettings::SHORT_PWRBTN::SLEEP);
   mappedInputManager.update();
 

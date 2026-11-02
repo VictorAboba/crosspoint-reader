@@ -11,6 +11,7 @@
 #include "activities/home/FileBrowserActivity.h"
 #include "activities/util/ConfirmationActivity.h"
 #include "components/UITheme.h"
+#include "crosschess/BootGuard.h"
 #include "fontIds.h"
 #include "network/FirmwareFlasher.h"
 
@@ -162,6 +163,7 @@ void SdFirmwareUpdateActivity::performUpdate() {
     self->requestUpdate(true);
   };
 
+  crosschess::bootguard::stopWatchdog();
   // Re-validate at flash time (TOCTOU): SD is removable, so don't trust the
   // pre-confirmation pass. The alreadyValidated parameter on the API stays
   // for callers (e.g. an OTA staging path) where the same byte stream was

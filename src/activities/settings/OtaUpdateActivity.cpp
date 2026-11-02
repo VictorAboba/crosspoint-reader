@@ -8,6 +8,7 @@
 #include "SilentRestart.h"
 #include "activities/network/WifiSelectionActivity.h"
 #include "components/UITheme.h"
+#include "crosschess/BootGuard.h"
 #include "fontIds.h"
 #include "network/OtaUpdater.h"
 
@@ -179,6 +180,7 @@ void OtaUpdateActivity::runUpdateInstall() {
     state = UPDATE_IN_PROGRESS;
   }
   requestUpdateAndWait();
+  crosschess::bootguard::stopWatchdog();
   const auto res = updater.installUpdate(
       [](void* ctx) {
         // immediate=true notifies the render task directly. The default deferred path only
