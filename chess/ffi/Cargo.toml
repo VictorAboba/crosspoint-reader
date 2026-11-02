@@ -1,0 +1,13 @@
+[package]
+name = "crosschess-ffi"
+description = "C API of the CrossChess core, linked into the firmware"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+crosschess-core = { path = "../core" }

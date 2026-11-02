@@ -1,0 +1,9 @@
+[package]
+name = "crosschess-core"
+description = "Chess rules and engine for CrossChess (no_std, no heap)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
