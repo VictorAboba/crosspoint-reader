@@ -1,0 +1,5 @@
+# git apply needs patch files byte-exact; keep LF on Windows checkouts.
+*.patch text eol=lf
+# Upstream adds strings at the end of these files too; keep both sides when
+# merging it in. Check the result for duplicate keys.
+lib/I18n/translations/*.yaml merge=union
